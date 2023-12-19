@@ -1,0 +1,49 @@
+package orderbook
+
+import (
+  "fmt"
+  "github.com/s-frick/crypto-front/view/layout"
+  "github.com/s-frick/crypto-front/model"
+)
+
+func bidTotalVolume(limit model.Limit) string {
+  bidTotalVolume := 0.0
+  for _, bid := range limit.Bids {
+    bidTotalVolume += bid.Size
+  }
+  return fmt.Sprintf("%.2f", bidTotalVolume)
+}
+
+func askTotalVolume(limit model.Limit) string {
+  askTotalVolume := 0.0
+  for _, ask := range limit.Asks {
+    askTotalVolume += ask.Size
+  }
+  return fmt.Sprintf("%.2f", askTotalVolume)
+}
+templ Show(limits []model.Limit) {
+  @layout.Base() {
+    <table class="border-collapse border border-zinc-500 bg-zinc-800 w-full shadow-sm">
+      <thead>
+        <tr>
+          <th class="border border-zinc-600">B.Order</th>
+          <th class="border border-zinc-600">Buy</th>
+          <th class="border border-zinc-600">Price</th>
+          <th class="border border-zinc-600">Sell</th>
+          <th class="border border-zinc-600">S.Order</th>
+        </tr>
+      </thead>
+      <tbody>
+        for _, limit := range limits {
+          <tr>
+            <td class="border border-zinc-700">-</td>
+            <td class="border border-zinc-700">{ askTotalVolume(limit) }</td>
+            <td class="border border-zinc-700">{ fmt.Sprintf("%.2f", limit.Price) }</td>
+            <td class="border border-zinc-700">{ bidTotalVolume(limit) }</td>
+            <td class="border border-zinc-700">-</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+}
